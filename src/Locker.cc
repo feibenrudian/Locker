@@ -15,9 +15,20 @@ SaveBagResult Locker::SaveBag(const Bag &save_bag) {
     return ret;
   }
 
-
   ret.err = 0;
   ret.ticket.id = rand();
+  content[ret.ticket.id] = save_bag;
   remain--;
   return ret;
 }
+GetTicketResult Locker::GetBag(const Ticket &ticket) {
+
+  if (content.count(ticket.id) != 0){
+    GetTicketResult result(0, content[ticket.id]);
+    remain++;
+    return result;
+  }
+
+  return GetTicketResult {1, Bag(0)};
+}
+
