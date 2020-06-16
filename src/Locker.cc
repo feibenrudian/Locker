@@ -21,14 +21,15 @@ SaveBagResult Locker::SaveBag(const Bag &save_bag) {
   remain--;
   return ret;
 }
-GetTicketResult Locker::GetBag(const Ticket &ticket) {
+GetBagResult Locker::GetBag(const Ticket &ticket) {
 
   if (content.count(ticket.id) != 0){
-    GetTicketResult result(0, content[ticket.id]);
+    GetBagResult result(0, content[ticket.id]);
+    content.erase(ticket.id);
     remain++;
     return result;
   }
 
-  return GetTicketResult {1, Bag(0)};
+  return GetBagResult{1, Bag(0)};
 }
 

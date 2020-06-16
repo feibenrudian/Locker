@@ -36,15 +36,32 @@ TEST(locker, should_return_bag_when_get_bag_given_valid_ticket){
   //given
   Locker locker(20);
   Bag bag(666);
-  SaveBagResult temp_result = locker.SaveBag(bag);
+  SaveBagResult save_bag_result = locker.SaveBag(bag);
 
   //when
-  GetTicketResult result = locker.GetBag(temp_result.ticket);
+  GetBagResult result = locker.GetBag(save_bag_result.ticket);
 
   //then
   EXPECT_EQ(0, result.err);
   EXPECT_EQ(666, result.bag.id);
   EXPECT_EQ(20, locker.remain);
+}
+
+TEST(locker, should_show_invalid_ticket_message_when_get_bag_given_duplicated_ticket){
+  //given
+  Locker locker(20);
+  Bag bag(666);
+  SaveBagResult save_bag_result = locker.SaveBag(bag);
+  (void)locker.GetBag(save_bag_result.ticket);
+
+  //when
+  GetBagResult result = locker.GetBag(save_bag_result.ticket);
+
+  //then
+  EXPECT_EQ(1, result.err);
+  EXPECT_EQ(0, result.bag.id);
+  EXPECT_EQ(20, locker.remain);
+
 }
 
 

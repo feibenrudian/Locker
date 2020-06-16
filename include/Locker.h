@@ -21,8 +21,8 @@ struct SaveBagResult{
   Ticket ticket;
 };
 
-struct GetTicketResult{
-  GetTicketResult(int err, const Bag &bag) : err(err), bag(bag) {}
+struct GetBagResult {
+  GetBagResult(int err, const Bag &bag) : err(err), bag(bag) {}
   int err; //0 success, 1 illegal ticket
   Bag bag;
 };
@@ -30,7 +30,7 @@ struct GetTicketResult{
 class Locker {
 public:
   SaveBagResult SaveBag(const Bag& save_bag);
-  GetTicketResult GetBag(const Ticket& ticket);
+  GetBagResult GetBag(const Ticket& ticket);
   int remain = 0;
   Locker(int remain);
 
