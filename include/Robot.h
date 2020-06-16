@@ -10,9 +10,10 @@
 
 class Robot {
 public:
-  SaveBagResult SaveBag(Bag bag);
+  SaveBagResult SaveBag(const Bag& bag);
   std::vector<Locker*> manage_lockers;
   Robot(const std::vector<Locker *> &manageLockers);
+  GetBagResult GetBag(const Ticket& ticket);
 };
 
 #endif // LOCKER_ROBOT_H
