@@ -61,7 +61,22 @@ TEST(locker, should_show_invalid_ticket_message_when_get_bag_given_duplicated_ti
   EXPECT_EQ(1, result.err);
   EXPECT_EQ(0, result.bag.id);
   EXPECT_EQ(20, locker.remain);
+}
 
+TEST(locker, should_show_invalid_ticket_message_when_get_bag_given_fake_ticket){
+  //given
+  Locker locker(20);
+  Bag bag(666);
+  (void)locker.SaveBag(bag);
+  Ticket fake_ticket;
+
+  //when
+  GetBagResult result = locker.GetBag(fake_ticket);
+
+  //then
+  EXPECT_EQ(1, result.err);
+  EXPECT_EQ(0, result.bag.id);
+  EXPECT_EQ(19, locker.remain);
 }
 
 
