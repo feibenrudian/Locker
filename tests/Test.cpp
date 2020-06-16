@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include "../include/Locker.h"
+#include "../include/Robot.h"
 
 using namespace std;
 
@@ -78,6 +79,28 @@ TEST(locker, should_show_invalid_ticket_message_when_get_bag_given_fake_ticket){
   EXPECT_EQ(0, result.bag.id);
   EXPECT_EQ(19, locker.remain);
 }
+
+TEST(robot, should_return_ticket_when_store_bag_given_both_lockers_are_available){
+  //given
+  Locker locker1(10);
+  Locker locker2(19);
+  std::vector<Locker*> robot_manage_lockers;
+  robot_manage_lockers.push_back(&locker1);
+  robot_manage_lockers.push_back(&locker2);
+  Robot robot(robot_manage_lockers);
+  Bag bag(666);
+
+  //when
+  SaveBagResult result = robot.SaveBag(bag);
+
+  //then
+  EXPECT_EQ(0, result.err);
+  EXPECT_NE(0, result.ticket.id);
+  EXPECT_EQ(9, locker1.remain);
+  EXPECT_EQ(19, locker2.remain);
+}
+
+
 
 
 
