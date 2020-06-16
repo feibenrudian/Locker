@@ -11,12 +11,11 @@ struct Bag {
 };
 
 struct Ticket{
-  int id;
+  int id = 0;
 };
 
-
 struct SaveBagResult{
-  int err;
+  int err; //0 success, 1 full err
   Ticket ticket;
 };
 
