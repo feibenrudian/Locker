@@ -1,7 +1,7 @@
-#include <gtest/gtest.h>
 #include "../include/Locker.h"
-#include "../include/Robot.h"
+#include "../include/PrimaryLockerRobot.h"
 #include "../include/SmartRobot.h"
+#include <gtest/gtest.h>
 
 using namespace std;
 
@@ -81,18 +81,18 @@ TEST(locker, should_show_invalid_ticket_message_when_get_bag_given_fake_ticket){
   EXPECT_EQ(19, locker.remain);
 }
 
-TEST(robot, should_return_ticket_when_store_bag_given_both_lockers_are_available){
+TEST(primary_locker_robot, should_return_ticket_when_store_bag_given_both_lockers_are_available){
   //given
   Locker locker1(10);
   Locker locker2(19);
   std::vector<Locker*> robot_manage_lockers;
   robot_manage_lockers.push_back(&locker1);
   robot_manage_lockers.push_back(&locker2);
-  Robot robot(robot_manage_lockers);
+  PrimaryLockerRobot primary_locker_robot(robot_manage_lockers);
   Bag bag(666);
 
   //when
-  SaveBagResult result = robot.SaveBag(bag);
+  SaveBagResult result = primary_locker_robot.SaveBag(bag);
 
   //then
   EXPECT_EQ(0, result.err);
@@ -101,20 +101,20 @@ TEST(robot, should_return_ticket_when_store_bag_given_both_lockers_are_available
   EXPECT_EQ(19, locker2.remain);
 }
 
-TEST(robot, should_return_ticket_when_store_bag_given_first_full_and_second_available){
+TEST(primary_locker_robot, should_return_ticket_when_store_bag_given_first_full_and_second_available){
   //given
   Locker locker1(1);
   Locker locker2(19);
   std::vector<Locker*> robot_manage_lockers;
   robot_manage_lockers.push_back(&locker1);
   robot_manage_lockers.push_back(&locker2);
-  Robot robot(robot_manage_lockers);
+  PrimaryLockerRobot primary_locker_robot(robot_manage_lockers);
   Bag bag1(666);
-  (void)robot.SaveBag(bag1);
+  (void)primary_locker_robot.SaveBag(bag1);
   Bag bag2(6666);
 
   //when
-  SaveBagResult result = robot.SaveBag(bag2);
+  SaveBagResult result = primary_locker_robot.SaveBag(bag2);
 
   //then
   EXPECT_EQ(0, result.err);
@@ -123,22 +123,22 @@ TEST(robot, should_return_ticket_when_store_bag_given_first_full_and_second_avai
   EXPECT_EQ(18, locker2.remain);
 }
 
-TEST(robot, should_show_store_error_when_store_bag_given_both_lockers_are_full){
+TEST(primary_locker_robot, should_show_store_error_when_store_bag_given_both_lockers_are_full){
   //given
   Locker locker1(1);
   Locker locker2(1);
   std::vector<Locker*> robot_manage_lockers;
   robot_manage_lockers.push_back(&locker1);
   robot_manage_lockers.push_back(&locker2);
-  Robot robot(robot_manage_lockers);
+  PrimaryLockerRobot primary_locker_robot(robot_manage_lockers);
   Bag bag1(666);
-  (void)robot.SaveBag(bag1);
+  (void)primary_locker_robot.SaveBag(bag1);
   Bag bag2(6666);
-  (void)robot.SaveBag(bag2);
+  (void)primary_locker_robot.SaveBag(bag2);
   Bag bag3(66666);
 
   //when
-  SaveBagResult result = robot.SaveBag(bag3);
+  SaveBagResult result = primary_locker_robot.SaveBag(bag3);
 
   //then
   EXPECT_EQ(1, result.err);
@@ -147,19 +147,19 @@ TEST(robot, should_show_store_error_when_store_bag_given_both_lockers_are_full){
   EXPECT_EQ(0, locker2.remain);
 }
 
-TEST(robot, should_return_bag_when_get_bag_given_valid_ticket){
+TEST(primary_locker_robot, should_return_bag_when_get_bag_given_valid_ticket){
   //given
   Locker locker1(10);
   Locker locker2(19);
   std::vector<Locker*> robot_manage_lockers;
   robot_manage_lockers.push_back(&locker1);
   robot_manage_lockers.push_back(&locker2);
-  Robot robot(robot_manage_lockers);
+  PrimaryLockerRobot primary_locker_robot(robot_manage_lockers);
   Bag bag(666);
-  SaveBagResult save_bag_result = robot.SaveBag(bag);
+  SaveBagResult save_bag_result = primary_locker_robot.SaveBag(bag);
 
   //when
-  GetBagResult result = robot.GetBag(save_bag_result.ticket);
+  GetBagResult result = primary_locker_robot.GetBag(save_bag_result.ticket);
 
   //then
   EXPECT_EQ(0, result.err);
@@ -168,20 +168,20 @@ TEST(robot, should_return_bag_when_get_bag_given_valid_ticket){
   EXPECT_EQ(19, locker2.remain);
 }
 
-TEST(robot, should_show_get_bag_error_when_get_bag_given_illegal_ticket){
+TEST(primary_locker_robot, should_show_get_bag_error_when_get_bag_given_illegal_ticket){
   //given
   Locker locker1(10);
   Locker locker2(19);
   std::vector<Locker*> robot_manage_lockers;
   robot_manage_lockers.push_back(&locker1);
   robot_manage_lockers.push_back(&locker2);
-  Robot robot(robot_manage_lockers);
+  PrimaryLockerRobot primary_locker_robot(robot_manage_lockers);
   Bag bag(666);
-  (void)robot.SaveBag(bag);
+  (void)primary_locker_robot.SaveBag(bag);
 
   //when
   Ticket ticket;
-  GetBagResult result = robot.GetBag(ticket);
+  GetBagResult result = primary_locker_robot.GetBag(ticket);
 
   //then
   EXPECT_EQ(1, result.err);
@@ -190,7 +190,7 @@ TEST(robot, should_show_get_bag_error_when_get_bag_given_illegal_ticket){
   EXPECT_EQ(19, locker2.remain);
 }
 
-TEST(robot, should_store_bag_to_first_locker_when_save_bag_given_first_greater_than_second){
+TEST(smart_robot, should_store_bag_to_first_locker_when_save_bag_given_first_greater_than_second){
   Locker locker1(10);
   Locker locker2(8);
   std::vector<Locker*> robot_manage_lockers;
@@ -206,7 +206,7 @@ TEST(robot, should_store_bag_to_first_locker_when_save_bag_given_first_greater_t
   EXPECT_EQ(8, locker2.remain);
 }
 
-TEST(robot, should_store_bag_to_second_locker_when_save_bag_given_second_greater_than_first){
+TEST(smart_robot, should_store_bag_to_second_locker_when_save_bag_given_second_greater_than_first){
   Locker locker1(8);
   Locker locker2(10);
   std::vector<Locker*> robot_manage_lockers;
@@ -222,7 +222,7 @@ TEST(robot, should_store_bag_to_second_locker_when_save_bag_given_second_greater
   EXPECT_EQ(9, locker2.remain);
 }
 
-TEST(robot, should_store_bag_to_first_locker_when_save_bag_given_both_are_equal){
+TEST(smart_robot, should_store_bag_to_first_locker_when_save_bag_given_both_are_equal){
   Locker locker1(10);
   Locker locker2(10);
   std::vector<Locker*> robot_manage_lockers;
@@ -238,7 +238,7 @@ TEST(robot, should_store_bag_to_first_locker_when_save_bag_given_both_are_equal)
   EXPECT_EQ(10, locker2.remain);
 }
 
-TEST(robot, should_show_invalid_message_when_save_bag_given_both_are_full){
+TEST(smart_robot, should_show_invalid_message_when_save_bag_given_both_are_full){
   Locker locker1(1);
   Locker locker2(1);
   std::vector<Locker*> robot_manage_lockers;
@@ -259,7 +259,7 @@ TEST(robot, should_show_invalid_message_when_save_bag_given_both_are_full){
   EXPECT_EQ(0, locker2.remain);
 }
 
-TEST(robot, should_return_bag_when_smart_robot_get_bag_given_valid_ticket){
+TEST(smart_robot, should_return_bag_when_smart_robot_get_bag_given_valid_ticket){
   Locker locker1(8);
   Locker locker2(10);
   std::vector<Locker*> robot_manage_lockers;
@@ -277,7 +277,7 @@ TEST(robot, should_return_bag_when_smart_robot_get_bag_given_valid_ticket){
   EXPECT_EQ(666, result.bag.id);
 }
 
-TEST(robot, should_show_get_bag_error_when_smart_robot_get_bag_given_illegal_ticket){
+TEST(smart_robot, should_show_get_bag_error_when_smart_robot_get_bag_given_illegal_ticket){
   Locker locker1(8);
   Locker locker2(10);
   std::vector<Locker*> robot_manage_lockers;
@@ -295,18 +295,18 @@ TEST(robot, should_show_get_bag_error_when_smart_robot_get_bag_given_illegal_tic
   EXPECT_EQ(9, locker2.remain);
 }
 
-TEST(robot, should_return_bag_when_primary_robot_get_bag_given_ticket_from_smart_robot){
+TEST(smart_robot, should_return_bag_when_primary_robot_get_bag_given_ticket_from_smart_robot){
   Locker locker1(8);
   Locker locker2(10);
   std::vector<Locker*> robot_manage_lockers;
   robot_manage_lockers.push_back(&locker1);
   robot_manage_lockers.push_back(&locker2);
   SmartRobot smart_robot(robot_manage_lockers);
-  Robot robot(robot_manage_lockers);
+  PrimaryLockerRobot primary_locker_robot(robot_manage_lockers);
   Bag bag(666);
   SaveBagResult save_bag_result = smart_robot.SaveBag(bag);
 
-  GetBagResult result = robot.GetBag(save_bag_result.ticket);
+  GetBagResult result = primary_locker_robot.GetBag(save_bag_result.ticket);
 
   EXPECT_EQ(get_bag_success, result.err);
   EXPECT_EQ(8, locker1.remain);
@@ -314,16 +314,16 @@ TEST(robot, should_return_bag_when_primary_robot_get_bag_given_ticket_from_smart
   EXPECT_EQ(666, result.bag.id);
 }
 
-TEST(robot, should_rerurn_bag_when_smart_robot_get_bag_given_ticket_from_primary_robot){
+TEST(smart_robot, should_rerurn_bag_when_smart_robot_get_bag_given_ticket_from_primary_robot){
   Locker locker1(8);
   Locker locker2(10);
   std::vector<Locker*> robot_manage_lockers;
   robot_manage_lockers.push_back(&locker1);
   robot_manage_lockers.push_back(&locker2);
   SmartRobot smart_robot(robot_manage_lockers);
-  Robot robot(robot_manage_lockers);
+  PrimaryLockerRobot primary_locker_robot(robot_manage_lockers);
   Bag bag(666);
-  SaveBagResult save_bag_result = robot.SaveBag(bag);
+  SaveBagResult save_bag_result = primary_locker_robot.SaveBag(bag);
 
   GetBagResult result = smart_robot.GetBag(save_bag_result.ticket);
 

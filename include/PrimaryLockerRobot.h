@@ -2,18 +2,18 @@
 // Created by Mingfei Deng on 2020/6/16.
 //
 
-#ifndef LOCKER_ROBOT_H
-#define LOCKER_ROBOT_H
+#ifndef LOCKER_PRIMARYLOCKERROBOT_H
+#define LOCKER_PRIMARYLOCKERROBOT_H
 
 #include "Locker.h"
 #include <vector>
 
-class Robot {
+class PrimaryLockerRobot {
 public:
   virtual SaveBagResult SaveBag(const Bag& bag);
   std::vector<Locker*> manage_lockers;
-  Robot(const std::vector<Locker *> &manageLockers);
+  PrimaryLockerRobot(const std::vector<Locker *> &manageLockers);
   virtual GetBagResult GetBag(const Ticket& ticket);
 };
 
-#endif // LOCKER_ROBOT_H
+#endif // LOCKER_PRIMARYLOCKERROBOT_H

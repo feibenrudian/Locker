@@ -4,9 +4,9 @@
 
 #ifndef LOCKER_SMARTROBOT_H
 #define LOCKER_SMARTROBOT_H
-#include "Robot.h"
+#include "PrimaryLockerRobot.h"
 
-class SmartRobot : public Robot {
+class SmartRobot : public PrimaryLockerRobot {
 public:
   SmartRobot(const std::vector<Locker *> &manageLockers);
   SaveBagResult SaveBag(const Bag &bag) override;

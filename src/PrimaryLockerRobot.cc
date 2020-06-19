@@ -2,12 +2,12 @@
 // Created by Mingfei Deng on 2020/6/16.
 //
 
-#include "../include/Robot.h"
+#include "../include/PrimaryLockerRobot.h"
 
-Robot::Robot(const std::vector<Locker *> &manageLockers)
+PrimaryLockerRobot::PrimaryLockerRobot(const std::vector<Locker *> &manageLockers)
     : manage_lockers(manageLockers) {}
 
-SaveBagResult Robot::SaveBag(const Bag& bag) {
+SaveBagResult PrimaryLockerRobot::SaveBag(const Bag& bag) {
   for (auto one_locker : manage_lockers){
     if (0 != one_locker->remain){
       return  one_locker->SaveBag(bag);
@@ -19,7 +19,7 @@ SaveBagResult Robot::SaveBag(const Bag& bag) {
   return ret;
 }
 
-GetBagResult Robot::GetBag(const Ticket &ticket) {
+GetBagResult PrimaryLockerRobot::GetBag(const Ticket &ticket) {
 
   for (auto one_locker : manage_lockers){
     auto get_bag_result =  one_locker->GetBag(ticket);
