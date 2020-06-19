@@ -15,7 +15,7 @@ SaveBagResult Robot::SaveBag(const Bag& bag) {
   }
 
   SaveBagResult ret;
-  ret.err = 1;
+  ret.err = save_bag_locker_full;
   return ret;
 }
 

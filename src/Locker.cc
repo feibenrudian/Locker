@@ -3,7 +3,7 @@
 //
 
 #include "../include/Locker.h"
-#include <cstdlib>
+#include <random>
 
 
 Locker::Locker(int remain) : remain(remain) {}
@@ -11,11 +11,11 @@ SaveBagResult Locker::SaveBag(const Bag &save_bag) {
   SaveBagResult ret;
 
   if (0 == remain){
-    ret.err = 1;
+    ret.err = save_bag_locker_full;
     return ret;
   }
 
-  ret.err = 0;
+  ret.err = save_bag_success;
   ret.ticket.id = rand();
   content[ret.ticket.id] = save_bag;
   remain--;

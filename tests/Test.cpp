@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include "../include/Locker.h"
 #include "../include/Robot.h"
+#include "../include/SmartRobot.h"
 
 using namespace std;
 
@@ -188,4 +189,26 @@ TEST(robot, should_show_get_bag_error_when_get_bag_given_illegal_ticket){
   EXPECT_EQ(9, locker1.remain);
   EXPECT_EQ(19, locker2.remain);
 }
+
+TEST(robot, should_store_bag_to_first_locker_when_save_bag_given_first_greater_than_second){
+  //given
+  Locker locker1(10);
+  Locker locker2(8);
+  std::vector<Locker*> robot_manage_lockers;
+  robot_manage_lockers.push_back(&locker1);
+  robot_manage_lockers.push_back(&locker2);
+  SmartRobot smart_robot(robot_manage_lockers);
+
+  //when
+  Bag bag(666);
+  SaveBagResult result = smart_robot.SaveBag(bag);
+
+  //then
+  EXPECT_EQ(save_bag_success, result.err);
+  EXPECT_EQ(9, locker1.remain);
+  EXPECT_EQ(8, locker2.remain);
+}
+
+
+
 

@@ -16,8 +16,13 @@ struct Ticket{
   int id = 0;
 };
 
+enum save_bag_result_err{
+  save_bag_success = 0,
+  save_bag_locker_full = 1
+};
+
 struct SaveBagResult{
-  int err; //0 success, 1 full err
+  save_bag_result_err err; //0 success, 1 full err
   Ticket ticket;
 };
 
