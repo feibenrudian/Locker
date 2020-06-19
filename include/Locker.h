@@ -22,7 +22,7 @@ enum save_bag_result_err{
 };
 
 struct SaveBagResult{
-  save_bag_result_err err; //0 success, 1 full err
+  save_bag_result_err err;
   Ticket ticket;
 };
 
@@ -33,7 +33,7 @@ enum get_bag_result_err{
 
 struct GetBagResult {
   GetBagResult(get_bag_result_err err, const Bag &bag) : err(err), bag(bag) {}
-  get_bag_result_err err; //0 success, 1 illegal ticket
+  get_bag_result_err err;
   Bag bag;
 };
 
