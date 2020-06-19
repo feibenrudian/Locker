@@ -24,12 +24,12 @@ SaveBagResult Locker::SaveBag(const Bag &save_bag) {
 GetBagResult Locker::GetBag(const Ticket &ticket) {
 
   if (content.count(ticket.id) != 0){
-    GetBagResult result(0, content[ticket.id]);
+    GetBagResult result(get_bag_success, content[ticket.id]);
     content.erase(ticket.id);
     remain++;
     return result;
   }
 
-  return GetBagResult{1, Bag(0)};
+  return GetBagResult{get_bag_illegal_ticket, Bag(0)};
 }
 

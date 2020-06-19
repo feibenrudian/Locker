@@ -26,6 +26,7 @@ SaveBagResult SmartRobot::SaveBag(const Bag &bag) {
   return ret;
 }
 GetBagResult SmartRobot::GetBag(const Ticket &ticket) {
+
   return Robot::GetBag(ticket);
 }
 SmartRobot::SmartRobot(const std::vector<Locker *> &manageLockers)

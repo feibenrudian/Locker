@@ -26,9 +26,14 @@ struct SaveBagResult{
   Ticket ticket;
 };
 
+enum get_bag_result_err{
+  get_bag_success = 0,
+  get_bag_illegal_ticket = 1
+};
+
 struct GetBagResult {
-  GetBagResult(int err, const Bag &bag) : err(err), bag(bag) {}
-  int err; //0 success, 1 illegal ticket
+  GetBagResult(get_bag_result_err err, const Bag &bag) : err(err), bag(bag) {}
+  get_bag_result_err err; //0 success, 1 illegal ticket
   Bag bag;
 };
 
