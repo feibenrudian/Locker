@@ -6,14 +6,13 @@
 #define LOCKER_PRIMARYLOCKERROBOT_H
 
 #include "Locker.h"
+#include "Robot.h"
 #include <vector>
 
-class PrimaryLockerRobot {
+class PrimaryLockerRobot : public Robot {
 public:
-  virtual SaveBagResult SaveBag(const Bag& bag);
-  std::vector<Locker*> manage_lockers;
   PrimaryLockerRobot(const std::vector<Locker *> &manageLockers);
-  virtual GetBagResult GetBag(const Ticket& ticket);
+  SaveBagResult SaveBag(const Bag& bag);
 };
 
 #endif // LOCKER_PRIMARYLOCKERROBOT_H

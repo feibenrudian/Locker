@@ -1,7 +1,7 @@
 ADD_SUBDIRECTORY(googletest EXCLUDE_FROM_ALL)
 AUX_SOURCE_DIRECTORY(. SOURCE)
 AUX_SOURCE_DIRECTORY(../src SOURCE)
-ADD_EXECUTABLE(TempTest ${SOURCE} ../src/Locker.cc ../src/PrimaryLockerRobot.cc ../src/SmartLockerRobot.cc)
+ADD_EXECUTABLE(TempTest ${SOURCE} ../src/Locker.cc ../src/PrimaryLockerRobot.cc ../src/SmartLockerRobot.cc ../src/Robot.cc)
 
 TARGET_LINK_LIBRARIES(TempTest  gtest_main gmock_main)
 

@@ -3,8 +3,10 @@
 //
 
 #include "../include/SmartLockerRobot.h"
-#include "../include/Locker.h"
-#include "../include/PrimaryLockerRobot.h"
+
+SmartLockerRobot::SmartLockerRobot(const std::vector<Locker *> &manageLockers)
+    : Robot(manageLockers) {}
+
 SaveBagResult SmartLockerRobot::SaveBag(const Bag &bag) {
   Locker* save_locker;
   int remain = 0;
@@ -25,9 +27,4 @@ SaveBagResult SmartLockerRobot::SaveBag(const Bag &bag) {
 
   return ret;
 }
-GetBagResult SmartLockerRobot::GetBag(const Ticket &ticket) {
 
-  return PrimaryLockerRobot::GetBag(ticket);
-}
-SmartLockerRobot::SmartLockerRobot(const std::vector<Locker *> &manageLockers)
-    : PrimaryLockerRobot(manageLockers) {}
