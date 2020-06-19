@@ -295,6 +295,24 @@ TEST(robot, should_show_get_bag_error_when_smart_robot_get_bag_given_illegal_tic
   EXPECT_EQ(9, locker2.remain);
 }
 
+TEST(robot, should_return_bag_when_primary_robot_get_bag_given_ticket_from_smart_robot){
+  Locker locker1(8);
+  Locker locker2(10);
+  std::vector<Locker*> robot_manage_lockers;
+  robot_manage_lockers.push_back(&locker1);
+  robot_manage_lockers.push_back(&locker2);
+  SmartRobot smart_robot(robot_manage_lockers);
+  Robot robot(robot_manage_lockers);
+  Bag bag(666);
+  SaveBagResult save_bag_result = smart_robot.SaveBag(bag);
+
+  GetBagResult result = robot.GetBag(save_bag_result.ticket);
+
+  EXPECT_EQ(get_bag_success, result.err);
+  EXPECT_EQ(8, locker1.remain);
+  EXPECT_EQ(10, locker2.remain);
+  EXPECT_EQ(666, result.bag.id);
+}
 
 
 
