@@ -669,3 +669,17 @@ TEST(
   EXPECT_EQ(bag_id, result.bag.id);
 }
 
+TEST(
+    locker_robot_manager,
+    should_show_error_when_manager_get_bag_given_invalid_ticket_and_manager_has_robot_and_locker) {
+  int bag_id = 666;
+  InitComplexRobotManagerResult locker_robot_manager_data = InitLockerRobotManagerWithOneRobotAndOneLocker(8, 10);
+  Bag bag(bag_id);
+  (void)locker_robot_manager_data.robot_manager.SaveBag(bag);
+
+  Ticket ticket;
+  GetBagResult result = locker_robot_manager_data.robot_manager.GetBag(ticket);
+
+  EXPECT_EQ(get_bag_illegal_ticket, result.err);
+}
+
