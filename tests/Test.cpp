@@ -1,4 +1,5 @@
 #include "../include/Locker.h"
+#include "../include/LockerRobotManager.h"
 #include "../include/PrimaryLockerRobot.h"
 #include "../include/SmartLockerRobot.h"
 #include <gtest/gtest.h>
@@ -333,7 +334,40 @@ TEST(smart_locker_robot, should_rerurn_bag_when_smart_robot_get_bag_given_ticket
   EXPECT_EQ(666, result.bag.id);
 }
 
+std::vector<Locker*> InitTwoLockers(int first_remain, int second_remain){
+  auto* locker1 = new Locker(first_remain);
+  auto* locker2 = new Locker(second_remain);
+  std::vector<Locker*> lockers;
+  lockers.push_back(locker1);
+  lockers.push_back(locker2);
 
+  return lockers;
+}
+
+bool CheckBagInLockers(int bag_id, std::vector<Locker*> lockers){
+    for (auto one_locker : lockers){
+      for (auto one_locker_item : one_locker->content){
+        if (bag_id == one_locker_item.second.id){
+          return true;
+        }
+      }
+    }
+
+    return false;
+}
+
+TEST(smart_locker_robot, should_store_bag_to_first_locker_when_save_bag_given_manager_only_has_lockers_and_both_are_available){
+  int bag_id = 666;
+  auto lockers =  InitTwoLockers(8, 10);
+  LockerRobotManager locker_robot_manager(lockers);
+  Bag bag(bag_id);
+
+  SaveBagResult result = locker_robot_manager.SaveBag(bag);
+
+  EXPECT_EQ(save_bag_success, result.err);
+  auto bag_in_lockers = CheckBagInLockers(bag_id, lockers);
+  EXPECT_EQ(true, bag_in_lockers);
+}
 
 
 
