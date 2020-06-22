@@ -9,3 +9,6 @@ LockerRobotManager::LockerRobotManager(const std::vector<Locker*>& lockers)
 SaveBagResult LockerRobotManager::SaveBag(const Bag &bag) {
   return internal_.SaveBag(bag);
 }
+GetBagResult LockerRobotManager::GetBag(const Ticket &ticket) {
+  return internal_.GetBag(ticket);
+}

@@ -11,6 +11,7 @@ class LockerRobotManager {
 public:
   LockerRobotManager(const std::vector<Locker*>& lockers);
   SaveBagResult SaveBag(const Bag& bag);
+  GetBagResult GetBag(const Ticket& ticket);
 private:
   PrimaryLockerRobot internal_;
 };
