@@ -440,3 +440,17 @@ TEST(
   EXPECT_EQ(get_bag_success, result.err);
   EXPECT_EQ(666, result.bag.id);
 }
+
+TEST(
+    smart_locker_robot,
+    should_show_error_when_manager_get_bag_given_invalid_ticket) {
+
+  auto lockers = InitTwoLockers(8, 10);
+  LockerRobotManager locker_robot_manager(lockers);
+
+  Ticket invalid_ticket;
+  GetBagResult result = locker_robot_manager.GetBag(invalid_ticket);
+
+  EXPECT_EQ(get_bag_illegal_ticket, result.err);
+}
+
