@@ -653,3 +653,19 @@ TEST(
 
   EXPECT_EQ(save_bag_locker_full, result.err);
 }
+
+TEST(
+    locker_robot_manager,
+    should_return_bag_when_manager_get_bag_given_valid_ticket_and_manager_has_robot_and_locker) {
+  int bag_id = 666;
+  InitComplexRobotManagerResult locker_robot_manager_data = InitLockerRobotManagerWithOneRobotAndOneLocker(8, 10);
+  Bag bag(bag_id);
+  SaveBagResult save_bag_result = locker_robot_manager_data.robot_manager.SaveBag(bag);
+
+  GetBagResult result = locker_robot_manager_data.robot_manager.GetBag(save_bag_result.ticket);
+
+
+  EXPECT_EQ(get_bag_success, result.err);
+  EXPECT_EQ(bag_id, result.bag.id);
+}
+
