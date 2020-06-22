@@ -600,6 +600,15 @@ InitComplexRobotManagerResult InitLockerRobotManagerWithOneRobotAndOneLocker(int
   return InitComplexRobotManagerResult(LockerRobotManager({locker1}, {robot}), robot, locker1);
 }
 
+void DeleteComplexRobotManager(InitComplexRobotManagerResult& data){
+    delete data.one_locker;
+    for (auto one_locker : data.robot->manage_lockers){
+      delete one_locker;
+    }
+
+    delete data.robot;
+};
+
 
 TEST(
     locker_robot_manager,
@@ -615,6 +624,8 @@ TEST(
 
   auto bag_in_lockers = CheckBagInLocker(666, locker_robot_manager_data.robot->manage_lockers[0]);
   EXPECT_EQ(true, bag_in_lockers);
+
+  DeleteComplexRobotManager(locker_robot_manager_data);
 }
 
 TEST(
@@ -633,6 +644,8 @@ TEST(
   EXPECT_EQ(save_bag_success, result.err);
   auto bag_in_lockers = CheckBagInLocker(6666, locker_robot_manager_data.one_locker);
   EXPECT_EQ(true, bag_in_lockers);
+
+  DeleteComplexRobotManager(locker_robot_manager_data);
 }
 
 
@@ -652,6 +665,8 @@ TEST(
   SaveBagResult result = locker_robot_manager_data.robot_manager.SaveBag(bag3);
 
   EXPECT_EQ(save_bag_locker_full, result.err);
+
+  DeleteComplexRobotManager(locker_robot_manager_data);
 }
 
 TEST(
@@ -667,6 +682,8 @@ TEST(
 
   EXPECT_EQ(get_bag_success, result.err);
   EXPECT_EQ(bag_id, result.bag.id);
+
+  DeleteComplexRobotManager(locker_robot_manager_data);
 }
 
 TEST(
@@ -681,5 +698,7 @@ TEST(
   GetBagResult result = locker_robot_manager_data.robot_manager.GetBag(ticket);
 
   EXPECT_EQ(get_bag_illegal_ticket, result.err);
+
+  DeleteComplexRobotManager(locker_robot_manager_data);
 }
 
