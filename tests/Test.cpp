@@ -572,11 +572,37 @@ TEST(
   auto Robots = InitTwoRobotBathHasOneLocker(8, 10);
   LockerRobotManager locker_robot_manager(Robots);
   Bag bag(bag_id);
-  SaveBagResult save_bag_result = locker_robot_manager.SaveBag(bag);
+  (void) locker_robot_manager.SaveBag(bag);
 
   Ticket ticket;
   GetBagResult result = locker_robot_manager.GetBag(ticket);
 
   EXPECT_EQ(get_bag_illegal_ticket, result.err);
+
   DeleteRobots(Robots);
+}
+
+LockerRobotManager InitLockerRobotManagerWithOneRobotAndOneLocker(int first_robot_locker_remain,
+                                                                  int second_locker_remain){
+  auto locker1 = new Locker(second_locker_remain);
+  Robot* robot = new PrimaryLockerRobot({new Locker(first_robot_locker_remain)});
+
+  return LockerRobotManager({locker1}, {robot});
+}
+
+
+TEST(
+    locker_robot_manager,
+    should_store_bag_to_robot_locker_when_save_bag_given_manager_has_robot_and_locker_and_both_are_available) {
+  int bag_id = 666;
+  LockerRobotManager locker_robot_manager  = InitLockerRobotManagerWithOneRobotAndOneLocker(8, 10);
+  Bag bag(bag_id);
+
+  SaveBagResult result = locker_robot_manager.SaveBag(bag);
+
+
+  EXPECT_EQ(save_bag_success, result.err);
+
+  auto bag_in_lockers = CheckBagInLocker(666, locker_robot_manager.managed_robot[0]->manage_lockers[0]);
+  EXPECT_EQ(true, bag_in_lockers);
 }

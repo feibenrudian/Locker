@@ -5,17 +5,21 @@
 #include "../include/LockerRobotManager.h"
 
 #include <utility>
-LockerRobotManager::LockerRobotManager(const std::vector<Locker*>& lockers)
+LockerRobotManager::LockerRobotManager(const std::vector<Locker *> &lockers)
     : internal_(lockers) {}
 
 LockerRobotManager::LockerRobotManager(std::vector<Robot *> managedRobot)
     : managed_robot(std::move(managedRobot)), internal_({}) {}
 
+LockerRobotManager::LockerRobotManager(const std::vector<Locker *> &lockers,
+                                       std::vector<Robot *> managedRobot)
+    : internal_(lockers), managed_robot(std::move(managedRobot)) {}
+
 SaveBagResult LockerRobotManager::SaveBag(const Bag &bag) {
-  if (!managed_robot.empty()){
-    for (auto one_robot : managed_robot){
+  if (!managed_robot.empty()) {
+    for (auto one_robot : managed_robot) {
       SaveBagResult save_bag_result = one_robot->SaveBag(bag);
-      if (save_bag_success == save_bag_result.err){
+      if (save_bag_success == save_bag_result.err) {
         return save_bag_result;
       }
     }
@@ -24,10 +28,10 @@ SaveBagResult LockerRobotManager::SaveBag(const Bag &bag) {
   return internal_.SaveBag(bag);
 }
 GetBagResult LockerRobotManager::GetBag(const Ticket &ticket) {
-  if (!managed_robot.empty()){
-    for (auto one_robot : managed_robot){
+  if (!managed_robot.empty()) {
+    for (auto one_robot : managed_robot) {
       GetBagResult get_bag_result = one_robot->GetBag(ticket);
-      if (get_bag_success == get_bag_result.err){
+      if (get_bag_success == get_bag_result.err) {
         return get_bag_result;
       }
     }
@@ -35,4 +39,3 @@ GetBagResult LockerRobotManager::GetBag(const Ticket &ticket) {
 
   return internal_.GetBag(ticket);
 }
-

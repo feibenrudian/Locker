@@ -10,15 +10,16 @@
 class LockerRobotManager {
 public:
   LockerRobotManager(const std::vector<Locker*>& lockers);
+  LockerRobotManager(std::vector<Robot *> managedRobot);
+  LockerRobotManager(const std::vector<Locker*>& lockers,
+                     std::vector<Robot *>  managedRobot);
   SaveBagResult SaveBag(const Bag& bag);
   GetBagResult GetBag(const Ticket& ticket);
+
+  std::vector<Robot*> managed_robot;
+
 private:
   PrimaryLockerRobot internal_;
-
-public:
-  LockerRobotManager(std::vector<Robot *> managedRobot);
-private:
-  std::vector<Robot*> managed_robot;
 };
 
 #endif // LOCKER_LOCKERROBOTMANAGER_H
