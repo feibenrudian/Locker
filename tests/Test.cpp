@@ -511,3 +511,22 @@ TEST(
   auto bag_in_lockers = CheckBagInLocker(6666, Robots[1]->manage_lockers[0]);
   EXPECT_EQ(true, bag_in_lockers);
 }
+
+TEST(
+    locker_robot_manager,
+    should_show_error_when_save_bag_given_manager_only_has_robots_and_both_are_full) {
+  int bag_id1 = 666;
+  int bag_id2 = 6666;
+  int bag_id3 = 6669;
+  auto Robots = InitTwoRobotBathHasOneLocker(1, 1);
+  LockerRobotManager locker_robot_manager(Robots);
+  Bag bag1(bag_id1);
+  Bag bag2(bag_id2);
+  Bag bag3(bag_id3);
+  (void)locker_robot_manager.SaveBag(bag1);
+  (void)locker_robot_manager.SaveBag(bag2);
+
+  SaveBagResult result = locker_robot_manager.SaveBag(bag3);
+
+  EXPECT_EQ(save_bag_locker_full, result.err);
+}
