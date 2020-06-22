@@ -16,9 +16,9 @@ public:
   SaveBagResult SaveBag(const Bag& bag);
   GetBagResult GetBag(const Ticket& ticket);
 
-  std::vector<Robot*> managed_robot;
 
 private:
+  std::vector<Robot*> managed_robot;
   PrimaryLockerRobot internal_;
 };
 

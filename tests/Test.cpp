@@ -582,12 +582,22 @@ TEST(
   DeleteRobots(Robots);
 }
 
-LockerRobotManager InitLockerRobotManagerWithOneRobotAndOneLocker(int first_robot_locker_remain,
+struct InitComplexRobotManagerResult{
+  LockerRobotManager robot_manager;
+  Robot* robot;
+  Locker* one_locker;
+  InitComplexRobotManagerResult(const LockerRobotManager &robotManager,
+                                Robot *robot, Locker *oneLocker)
+      : robot_manager(robotManager), robot(robot), one_locker(oneLocker) {}
+};
+
+InitComplexRobotManagerResult InitLockerRobotManagerWithOneRobotAndOneLocker(int first_robot_locker_remain,
                                                                   int second_locker_remain){
   auto locker1 = new Locker(second_locker_remain);
   Robot* robot = new PrimaryLockerRobot({new Locker(first_robot_locker_remain)});
 
-  return LockerRobotManager({locker1}, {robot});
+
+  return InitComplexRobotManagerResult(LockerRobotManager({locker1}, {robot}), robot, locker1);
 }
 
 
@@ -595,14 +605,32 @@ TEST(
     locker_robot_manager,
     should_store_bag_to_robot_locker_when_save_bag_given_manager_has_robot_and_locker_and_both_are_available) {
   int bag_id = 666;
-  LockerRobotManager locker_robot_manager  = InitLockerRobotManagerWithOneRobotAndOneLocker(8, 10);
+  InitComplexRobotManagerResult locker_robot_manager_data = InitLockerRobotManagerWithOneRobotAndOneLocker(8, 10);
   Bag bag(bag_id);
 
-  SaveBagResult result = locker_robot_manager.SaveBag(bag);
+  SaveBagResult result = locker_robot_manager_data.robot_manager.SaveBag(bag);
 
 
   EXPECT_EQ(save_bag_success, result.err);
 
-  auto bag_in_lockers = CheckBagInLocker(666, locker_robot_manager.managed_robot[0]->manage_lockers[0]);
+  auto bag_in_lockers = CheckBagInLocker(666, locker_robot_manager_data.robot->manage_lockers[0]);
+  EXPECT_EQ(true, bag_in_lockers);
+}
+
+TEST(
+    locker_robot_manager,
+    should_store_bag_to_locker_when_save_bag_given_manager_has_robot_and_locker_and_robot_locker_is_full) {
+  int bag_id1 = 666;
+  int bag_id2 = 6666;
+  InitComplexRobotManagerResult locker_robot_manager_data = InitLockerRobotManagerWithOneRobotAndOneLocker(1, 10);
+  Bag bag1(bag_id1);
+  Bag bag2(bag_id2);
+  (void)locker_robot_manager_data.robot_manager.SaveBag(bag1);
+
+
+  SaveBagResult result = locker_robot_manager_data.robot_manager.SaveBag(bag2);
+
+  EXPECT_EQ(save_bag_success, result.err);
+  auto bag_in_lockers = CheckBagInLocker(6666, locker_robot_manager_data.one_locker);
   EXPECT_EQ(true, bag_in_lockers);
 }
