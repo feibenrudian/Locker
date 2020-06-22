@@ -24,6 +24,15 @@ SaveBagResult LockerRobotManager::SaveBag(const Bag &bag) {
   return internal_.SaveBag(bag);
 }
 GetBagResult LockerRobotManager::GetBag(const Ticket &ticket) {
+  if (!managed_robot.empty()){
+    for (auto one_robot : managed_robot){
+      GetBagResult get_bag_result = one_robot->GetBag(ticket);
+      if (get_bag_success == get_bag_result.err){
+        return get_bag_result;
+      }
+    }
+  }
+
   return internal_.GetBag(ticket);
 }
 
