@@ -565,3 +565,18 @@ TEST(
   DeleteRobots(Robots);
 }
 
+TEST(
+    locker_robot_manager,
+    should_show_error_when_manager_get_bag_given_invalid_ticket_and_manager_only_has_two_robots) {
+  int bag_id = 666;
+  auto Robots = InitTwoRobotBathHasOneLocker(8, 10);
+  LockerRobotManager locker_robot_manager(Robots);
+  Bag bag(bag_id);
+  SaveBagResult save_bag_result = locker_robot_manager.SaveBag(bag);
+
+  Ticket ticket;
+  GetBagResult result = locker_robot_manager.GetBag(ticket);
+
+  EXPECT_EQ(get_bag_illegal_ticket, result.err);
+  DeleteRobots(Robots);
+}
