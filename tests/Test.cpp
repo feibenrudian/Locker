@@ -362,6 +362,12 @@ std::vector<Locker *> InitTwoLockers(int first_remain, int second_remain) {
   return lockers;
 }
 
+void DeleteLockers(std::vector<Locker *> lockers){
+  for (auto one_locker : lockers){
+    delete one_locker;
+  }
+}
+
 bool CheckBagInLocker(int bag_id, const Locker *lockers) {
   for (auto one_locker_item : lockers->content) {
     if (bag_id == one_locker_item.second.id) {
@@ -373,7 +379,7 @@ bool CheckBagInLocker(int bag_id, const Locker *lockers) {
 }
 
 TEST(
-    smart_locker_robot,
+    locker_robot_manager,
     should_store_bag_to_first_locker_when_save_bag_given_manager_only_has_lockers_and_both_are_available) {
   int bag_id = 666;
   auto lockers = InitTwoLockers(8, 10);
@@ -385,11 +391,13 @@ TEST(
   EXPECT_EQ(save_bag_success, result.err);
   auto bag_in_lockers = CheckBagInLocker(bag_id, lockers[0]);
   EXPECT_EQ(true, bag_in_lockers);
+
+  DeleteLockers(lockers);
 }
 
 
 TEST(
-    smart_locker_robot,
+    locker_robot_manager,
     should_store_bag_to_second_locker_when_save_bag_given_manager_only_has_lockers_and_first_is_full) {
   int bag_id1 = 666;
   int bag_id2 = 6666;
@@ -404,10 +412,12 @@ TEST(
   EXPECT_EQ(save_bag_success, result.err);
   auto bag_in_lockers = CheckBagInLocker(6666, lockers[1]);
   EXPECT_EQ(true, bag_in_lockers);
+
+  DeleteLockers(lockers);
 }
 
 TEST(
-    smart_locker_robot,
+    locker_robot_manager,
     should_show_error_when_save_bag_given_manager_only_has_lockers_and_both_are_full) {
   int bag_id1 = 666;
   int bag_id2 = 6666;
@@ -423,10 +433,12 @@ TEST(
   SaveBagResult result = locker_robot_manager.SaveBag(bag3);
 
   EXPECT_EQ(save_bag_locker_full, result.err);
+
+  DeleteLockers(lockers);
 }
 
 TEST(
-    smart_locker_robot,
+    locker_robot_manager,
     should_return_bag_when_manager_get_bag_given_valid_ticket) {
   int bag_id = 666;
   auto lockers = InitTwoLockers(8, 10);
@@ -439,10 +451,12 @@ TEST(
 
   EXPECT_EQ(get_bag_success, result.err);
   EXPECT_EQ(666, result.bag.id);
+
+  DeleteLockers(lockers);
 }
 
 TEST(
-    smart_locker_robot,
+    locker_robot_manager,
     should_show_error_when_manager_get_bag_given_invalid_ticket) {
 
   auto lockers = InitTwoLockers(8, 10);
@@ -452,5 +466,9 @@ TEST(
   GetBagResult result = locker_robot_manager.GetBag(invalid_ticket);
 
   EXPECT_EQ(get_bag_illegal_ticket, result.err);
+
+  DeleteLockers(lockers);
 }
+
+
 
