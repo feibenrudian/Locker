@@ -386,3 +386,22 @@ TEST(
   auto bag_in_lockers = CheckBagInLocker(bag_id, lockers[0]);
   EXPECT_EQ(true, bag_in_lockers);
 }
+
+
+TEST(
+    smart_locker_robot,
+    should_store_bag_to_second_locker_when_save_bag_given_manager_only_has_lockers_and_first_is_full) {
+  int bag_id1 = 666;
+  int bag_id2 = 6666;
+  auto lockers = InitTwoLockers(1, 10);
+  LockerRobotManager locker_robot_manager(lockers);
+  Bag bag1(bag_id1);
+  Bag bag2(bag_id2);
+  (void)locker_robot_manager.SaveBag(bag1);
+
+  SaveBagResult result = locker_robot_manager.SaveBag(bag2);
+
+  EXPECT_EQ(save_bag_success, result.err);
+  auto bag_in_lockers = CheckBagInLocker(6666, lockers[1]);
+  EXPECT_EQ(true, bag_in_lockers);
+}
