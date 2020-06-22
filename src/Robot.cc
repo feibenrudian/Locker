@@ -20,3 +20,4 @@ GetBagResult Robot::GetBag(const Ticket &ticket) {
 
   return GetBagResult{get_bag_illegal_ticket, Bag(0)};
 }
+Robot::~Robot() {}

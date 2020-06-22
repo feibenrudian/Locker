@@ -478,6 +478,17 @@ InitTwoRobotBathHasOneLocker(int first_robot_locker_remain,
   return std::vector<Robot *>{primary_locker_robot, smart_locker_robot};
 }
 
+void DeleteRobots(std::vector<Robot *> robots){
+  for (auto one_robot : robots){
+    for (auto one_locker : one_robot->manage_lockers){
+      delete one_locker;
+    }
+
+    delete one_robot;
+  }
+}
+
+
 TEST(
     locker_robot_manager,
     should_store_bag_to_first_robot_locker_when_save_bag_given_manager_only_has_robots_and_both_are_available) {
@@ -492,6 +503,8 @@ TEST(
   EXPECT_EQ(save_bag_success, result.err);
   auto bag_in_lockers = CheckBagInLocker(666, Robots[0]->manage_lockers[0]);
   EXPECT_EQ(true, bag_in_lockers);
+
+  DeleteRobots(Robots);
 }
 
 TEST(
@@ -510,6 +523,8 @@ TEST(
   EXPECT_EQ(save_bag_success, result.err);
   auto bag_in_lockers = CheckBagInLocker(6666, Robots[1]->manage_lockers[0]);
   EXPECT_EQ(true, bag_in_lockers);
+
+  DeleteRobots(Robots);
 }
 
 TEST(
@@ -529,4 +544,23 @@ TEST(
   SaveBagResult result = locker_robot_manager.SaveBag(bag3);
 
   EXPECT_EQ(save_bag_locker_full, result.err);
+
+  DeleteRobots(Robots);
+}
+
+TEST(
+    locker_robot_manager,
+    should_return_bag_when_manager_get_bag_given_valid_ticket_and_manager_only_has_two_robots) {
+  int bag_id = 666;
+  auto Robots = InitTwoRobotBathHasOneLocker(8, 10);
+  LockerRobotManager locker_robot_manager(Robots);
+  Bag bag(bag_id);
+  SaveBagResult save_bag_result = locker_robot_manager.SaveBag(bag);
+
+  GetBagResult result = locker_robot_manager.GetBag(save_bag_result.ticket);
+
+  EXPECT_EQ(get_bag_success, result.err);
+  EXPECT_EQ(666, result.bag.id);
+
+  DeleteRobots(Robots);
 }

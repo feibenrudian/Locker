@@ -11,6 +11,7 @@
 class Robot {
 public:
   Robot(std::vector<Locker *> manageLockers);
+  virtual ~Robot();
   virtual SaveBagResult SaveBag(const Bag& bag) = 0;
   GetBagResult GetBag(const Ticket& ticket);
 
