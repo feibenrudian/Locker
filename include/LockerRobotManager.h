@@ -14,6 +14,11 @@ public:
   GetBagResult GetBag(const Ticket& ticket);
 private:
   PrimaryLockerRobot internal_;
+
+public:
+  LockerRobotManager(std::vector<Robot *> managedRobot);
+private:
+  std::vector<Robot*> managed_robot;
 };
 
 #endif // LOCKER_LOCKERROBOTMANAGER_H
