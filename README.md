@@ -76,4 +76,36 @@ A practice for TDD
 
 **Given** Manager 管理一个 locker 和 一个 robot，票据无效	**When** 取包	**Then** 取包失败，提示无效票据. 
 
+***
+### Tasking - LockerRobotDirector
+**Given** LockerRobotDirector 管理一个 Manager，Manager 只管理两个 Locker，剩余容量和容量分别为 0，8；3，5  
+**When** LockerRobotDirector 统计报表  
+**Then** 打印报表  
+M 3 13  
+    L 0 8  
+    L 3 5  
+  
+**Given** LockerRobotDirector 管理一个 Manager，Manager 管理一个 Locker，剩余容量和容量为 2，5；管理一个 Robot，Robot 管理的 Locker 剩余容量和容量为 1，5  
+**When** LockerRobotDirector 统计报表  
+**Then** 打印报表    
+M 3 10  
+  L 2 5  
+  R 1 5  
+    L 1 5  
+  
+**Given** LockerRobotDirector 管理一个 Manager，Manager 只管理两个 Robot，Robot 管理的 Locker 剩余容量和容量分别为 3，9；2，4  
+**When** LockerRobotDirector 统计报表  
+**Then** 打印报表  
+M 5 13    
+    R 3 9    
+        L 3 9    
+    R 2 4      
+        L 2 4  
+        
+**Given** LockerRobotDirector 管理一个 Manager，Manager 只管理两个 Locker，剩余容量和容量分别为 0，8；3，5。存在不被 Manager 管理的 Locker 和 Robot，剩余容量和容量分别为 2，6；3，8 
+**When** LockerRobotDirector 统计报表  
+**Then** 打印报表  
+M 3 13  
+    L 0 8  
+    L 3 5 
 
