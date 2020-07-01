@@ -1,8 +1,8 @@
 #include "../include/Locker.h"
+#include "../include/LockerRobotDirector.h"
 #include "../include/LockerRobotManager.h"
 #include "../include/PrimaryLockerRobot.h"
 #include "../include/SmartLockerRobot.h"
-#include "../include/LockerRobotDirector.h"
 #include <gtest/gtest.h>
 
 using namespace std;
@@ -479,16 +479,15 @@ InitTwoRobotBathHasOneLocker(int first_robot_locker_remain,
   return std::vector<Robot *>{primary_locker_robot, smart_locker_robot};
 }
 
-void DeleteRobots(std::vector<Robot *> robots){
-  for (auto one_robot : robots){
-    for (auto one_locker : one_robot->manage_lockers){
+void DeleteRobots(std::vector<Robot *> robots) {
+  for (auto one_robot : robots) {
+    for (auto one_locker : one_robot->manage_lockers) {
       delete one_locker;
     }
 
     delete one_robot;
   }
 }
-
 
 TEST(
     locker_robot_manager,
@@ -573,7 +572,7 @@ TEST(
   auto Robots = InitTwoRobotBathHasOneLocker(8, 10);
   LockerRobotManager locker_robot_manager(Robots);
   Bag bag(bag_id);
-  (void) locker_robot_manager.SaveBag(bag);
+  (void)locker_robot_manager.SaveBag(bag);
 
   Ticket ticket;
   GetBagResult result = locker_robot_manager.GetBag(ticket);
@@ -583,47 +582,49 @@ TEST(
   DeleteRobots(Robots);
 }
 
-struct InitComplexRobotManagerResult{
+struct InitComplexRobotManagerResult {
   LockerRobotManager robot_manager;
-  Robot* robot;
-  Locker* one_locker;
+  Robot *robot;
+  Locker *one_locker;
   InitComplexRobotManagerResult(const LockerRobotManager &robotManager,
                                 Robot *robot, Locker *oneLocker)
       : robot_manager(robotManager), robot(robot), one_locker(oneLocker) {}
 };
 
-InitComplexRobotManagerResult InitLockerRobotManagerWithOneRobotAndOneLocker(int first_robot_locker_remain,
-                                                                  int second_locker_remain){
+InitComplexRobotManagerResult
+InitLockerRobotManagerWithOneRobotAndOneLocker(int first_robot_locker_remain,
+                                               int second_locker_remain) {
   auto locker1 = new Locker(second_locker_remain);
-  Robot* robot = new PrimaryLockerRobot({new Locker(first_robot_locker_remain)});
+  Robot *robot =
+      new PrimaryLockerRobot({new Locker(first_robot_locker_remain)});
 
-
-  return InitComplexRobotManagerResult(LockerRobotManager({locker1}, {robot}), robot, locker1);
+  return InitComplexRobotManagerResult(LockerRobotManager({locker1}, {robot}),
+                                       robot, locker1);
 }
 
-void DeleteComplexRobotManager(InitComplexRobotManagerResult& data){
-    delete data.one_locker;
-    for (auto one_locker : data.robot->manage_lockers){
-      delete one_locker;
-    }
+void DeleteComplexRobotManager(InitComplexRobotManagerResult &data) {
+  delete data.one_locker;
+  for (auto one_locker : data.robot->manage_lockers) {
+    delete one_locker;
+  }
 
-    delete data.robot;
+  delete data.robot;
 };
-
 
 TEST(
     locker_robot_manager,
     should_store_bag_to_robot_locker_when_save_bag_given_manager_has_robot_and_locker_and_both_are_available) {
   int bag_id = 666;
-  InitComplexRobotManagerResult locker_robot_manager_data = InitLockerRobotManagerWithOneRobotAndOneLocker(8, 10);
+  InitComplexRobotManagerResult locker_robot_manager_data =
+      InitLockerRobotManagerWithOneRobotAndOneLocker(8, 10);
   Bag bag(bag_id);
 
   SaveBagResult result = locker_robot_manager_data.robot_manager.SaveBag(bag);
 
-
   EXPECT_EQ(save_bag_success, result.err);
 
-  auto bag_in_lockers = CheckBagInLocker(666, locker_robot_manager_data.robot->manage_lockers[0]);
+  auto bag_in_lockers =
+      CheckBagInLocker(666, locker_robot_manager_data.robot->manage_lockers[0]);
   EXPECT_EQ(true, bag_in_lockers);
 
   DeleteComplexRobotManager(locker_robot_manager_data);
@@ -634,21 +635,21 @@ TEST(
     should_store_bag_to_locker_when_save_bag_given_manager_has_robot_and_locker_and_robot_locker_is_full) {
   int bag_id1 = 666;
   int bag_id2 = 6666;
-  InitComplexRobotManagerResult locker_robot_manager_data = InitLockerRobotManagerWithOneRobotAndOneLocker(1, 10);
+  InitComplexRobotManagerResult locker_robot_manager_data =
+      InitLockerRobotManagerWithOneRobotAndOneLocker(1, 10);
   Bag bag1(bag_id1);
   Bag bag2(bag_id2);
   (void)locker_robot_manager_data.robot_manager.SaveBag(bag1);
 
-
   SaveBagResult result = locker_robot_manager_data.robot_manager.SaveBag(bag2);
 
   EXPECT_EQ(save_bag_success, result.err);
-  auto bag_in_lockers = CheckBagInLocker(6666, locker_robot_manager_data.one_locker);
+  auto bag_in_lockers =
+      CheckBagInLocker(6666, locker_robot_manager_data.one_locker);
   EXPECT_EQ(true, bag_in_lockers);
 
   DeleteComplexRobotManager(locker_robot_manager_data);
 }
-
 
 TEST(
     locker_robot_manager,
@@ -656,7 +657,8 @@ TEST(
   int bag_id1 = 666;
   int bag_id2 = 6666;
   int bag_id3 = 6669;
-  InitComplexRobotManagerResult locker_robot_manager_data = InitLockerRobotManagerWithOneRobotAndOneLocker(1, 1);
+  InitComplexRobotManagerResult locker_robot_manager_data =
+      InitLockerRobotManagerWithOneRobotAndOneLocker(1, 1);
   Bag bag1(bag_id1);
   Bag bag2(bag_id2);
   Bag bag3(bag_id3);
@@ -674,12 +676,14 @@ TEST(
     locker_robot_manager,
     should_return_bag_when_manager_get_bag_given_valid_ticket_and_manager_has_robot_and_locker) {
   int bag_id = 666;
-  InitComplexRobotManagerResult locker_robot_manager_data = InitLockerRobotManagerWithOneRobotAndOneLocker(8, 10);
+  InitComplexRobotManagerResult locker_robot_manager_data =
+      InitLockerRobotManagerWithOneRobotAndOneLocker(8, 10);
   Bag bag(bag_id);
-  SaveBagResult save_bag_result = locker_robot_manager_data.robot_manager.SaveBag(bag);
+  SaveBagResult save_bag_result =
+      locker_robot_manager_data.robot_manager.SaveBag(bag);
 
-  GetBagResult result = locker_robot_manager_data.robot_manager.GetBag(save_bag_result.ticket);
-
+  GetBagResult result =
+      locker_robot_manager_data.robot_manager.GetBag(save_bag_result.ticket);
 
   EXPECT_EQ(get_bag_success, result.err);
   EXPECT_EQ(bag_id, result.bag.id);
@@ -691,7 +695,8 @@ TEST(
     locker_robot_manager,
     should_show_error_when_manager_get_bag_given_invalid_ticket_and_manager_has_robot_and_locker) {
   int bag_id = 666;
-  InitComplexRobotManagerResult locker_robot_manager_data = InitLockerRobotManagerWithOneRobotAndOneLocker(8, 10);
+  InitComplexRobotManagerResult locker_robot_manager_data =
+      InitLockerRobotManagerWithOneRobotAndOneLocker(8, 10);
   Bag bag(bag_id);
   (void)locker_robot_manager_data.robot_manager.SaveBag(bag);
 
@@ -703,19 +708,20 @@ TEST(
   DeleteComplexRobotManager(locker_robot_manager_data);
 }
 
-TEST(locker_robot_director,
-     should_print_report_when_statistic_report_given_a_manager_and_manager_has_two_lockers){
+TEST(
+    locker_robot_director,
+    should_print_report_when_statistic_report_given_a_manager_and_manager_has_two_lockers) {
 
   auto locker1 = new Locker(8);
   auto locker2 = new Locker(5);
 
-  for (int i = 0; i < 8; i++){
+  for (int i = 0; i < 8; i++) {
     Bag bag(i);
     locker1->SaveBag(bag);
   }
 
-  for (int i = 0; i < 2; i++){
-    Bag bag(i*10);
+  for (int i = 0; i < 2; i++) {
+    Bag bag(i * 10);
     locker2->SaveBag(bag);
   }
 
@@ -726,24 +732,25 @@ TEST(locker_robot_director,
 
   LockerRobotDirector locker_robot_director(locker_robot_managers);
 
-  std::string report =  locker_robot_director.Report();
+  std::string report = locker_robot_director.Report();
 
   std::cout << report << std::endl;
   EXPECT_EQ("M 3 13\n\tL 0 8\n\tL 3 5\n", report);
 }
 
-TEST(locker_robot_director,
-     should_print_report_when_statistic_report_given_a_manager_and_manager_has_one_locker_and_one_robot){
+TEST(
+    locker_robot_director,
+    should_print_report_when_statistic_report_given_a_manager_and_manager_has_one_locker_and_one_robot) {
   auto locker1 = new Locker(5);
   auto locker2 = new Locker(5);
 
-  for (int i = 0; i < 3; i++){
+  for (int i = 0; i < 3; i++) {
     Bag bag(i);
     locker1->SaveBag(bag);
   }
 
-  for (int i = 0; i < 4; i++){
-    Bag bag(i*10);
+  for (int i = 0; i < 4; i++) {
+    Bag bag(i * 10);
     locker2->SaveBag(bag);
   }
 
@@ -755,8 +762,42 @@ TEST(locker_robot_director,
 
   LockerRobotDirector locker_robot_director(locker_robot_managers);
 
-  std::string report =  locker_robot_director.Report();
+  std::string report = locker_robot_director.Report();
   std::cout << report << std::endl;
   std::cout << "M 3 10\n\tL 2 5\n\tR 1 5\n\t\tL 1 5\n" << std::endl;
   EXPECT_EQ("M 3 10\n\tL 2 5\n\tR 1 5\n\t\tL 1 5\n", report);
+}
+
+TEST(
+    locker_robot_director,
+    should_print_report_when_statistic_report_given_a_manager_and_manager_has_two_robots) {
+  auto locker1 = new Locker(9);
+  auto locker2 = new Locker(4);
+
+  for (int i = 0; i < 6; i++) {
+    Bag bag(i);
+    locker1->SaveBag(bag);
+  }
+
+  for (int i = 0; i < 2; i++) {
+    Bag bag(i * 10);
+    locker2->SaveBag(bag);
+  }
+
+  auto primary_locker_robot1 = new PrimaryLockerRobot({locker1});
+  auto primary_locker_robot2 = new PrimaryLockerRobot({locker2});
+  LockerRobotManager locker_robot_manager(
+      {primary_locker_robot1, primary_locker_robot2});
+
+  std::vector<LockerRobotManager> locker_robot_managers;
+  locker_robot_managers.push_back(locker_robot_manager);
+
+  LockerRobotDirector locker_robot_director(locker_robot_managers);
+
+  std::string report = locker_robot_director.Report();
+  std::cout << report << std::endl;
+  std::string expect_report = "M 5 13\n\tR 3 9\n\t\tL 3 9\n\tR 2 4\n\t\tL 2 4\n";
+  std::cout << expect_report << std::endl;
+
+  EXPECT_EQ(expect_report, report);
 }

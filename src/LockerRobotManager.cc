@@ -56,7 +56,7 @@ std::string LockerRobotManager::Report() {
     auto robot_report = one_robot->Report("\t");
     remain += robot_report.remain;
     amount += robot_report.amount;
-    RobotReport = robot_report.display_content;
+    RobotReport += robot_report.display_content;
   }
 
   report = "M " + std::to_string(remain) + " " +std::to_string(amount) + "\n";
