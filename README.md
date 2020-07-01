@@ -105,9 +105,9 @@ M 5 13
 **Given** LockerRobotDirector 管理一个 Manager，Manager 只管理两个 Locker，剩余容量和容量分别为 0，8；3，5。存在不被 Manager 管理的 Locker 和 Robot，剩余容量和容量分别为 2，6；3，8 
 **When** LockerRobotDirector 统计报表  
 **Then** 打印报表  
-M 3 13 
-    R 0 8 
-        L 0 8 
-    R 3 5 
-        L 3 5 
+M 3 13    
+    R 0 8    
+        L 0 8    
+    R 3 5    
+        L 3 5    
 
