@@ -801,3 +801,50 @@ TEST(
 
   EXPECT_EQ(expect_report, report);
 }
+
+TEST(
+    locker_robot_director,
+    should_print_report_when_statistic_report_given_unmanaged_locker_and_robot) {
+  auto locker1 = new Locker(8);
+  auto locker2 = new Locker(5);
+  auto locker3 = new Locker(6);
+  auto locker4 = new Locker(8);
+
+  for (int i = 0; i < 8; i++) {
+    Bag bag(i);
+    locker1->SaveBag(bag);
+  }
+
+  for (int i = 0; i < 2; i++) {
+    Bag bag(i * 10);
+    locker2->SaveBag(bag);
+  }
+
+  for (int i = 0; i < 4; i++) {
+    Bag bag(i * 100);
+    locker3->SaveBag(bag);
+  }
+
+  for (int i = 0; i < 5; i++) {
+    Bag bag(i * 1000);
+    locker4->SaveBag(bag);
+  }
+
+  auto primary_locker_robot1 = new PrimaryLockerRobot({locker1});
+  auto primary_locker_robot2 = new PrimaryLockerRobot({locker2});
+  auto primary_locker_robot3 = new PrimaryLockerRobot({locker3});
+  LockerRobotManager locker_robot_manager(
+      {primary_locker_robot1, primary_locker_robot2});
+
+  std::vector<LockerRobotManager> locker_robot_managers;
+  locker_robot_managers.push_back(locker_robot_manager);
+
+  LockerRobotDirector locker_robot_director(locker_robot_managers);
+
+  std::string report = locker_robot_director.Report();
+  std::cout << report << std::endl;
+  std::string expect_report = "M 3 13\n\tR 0 8\n\t\tL 0 8\n\tR 3 5\n\t\tL 3 5\n";
+  std::cout << expect_report << std::endl;
+
+  EXPECT_EQ(expect_report, report);
+}
