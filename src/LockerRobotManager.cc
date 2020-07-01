@@ -53,10 +53,10 @@ std::string LockerRobotManager::Report() {
 
   std::string RobotReport;
   for (auto one_robot : managed_robot){
-    auto report = one_robot->Report();
-    remain += report.remain;
-    amount += report.amount;
-    RobotReport = "\t" + report.display_content;
+    auto robot_report = one_robot->Report("\t");
+    remain += robot_report.remain;
+    amount += robot_report.amount;
+    RobotReport = robot_report.display_content;
   }
 
   report = "M " + std::to_string(remain) + " " +std::to_string(amount) + "\n";

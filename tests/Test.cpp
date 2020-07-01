@@ -728,6 +728,35 @@ TEST(locker_robot_director,
 
   std::string report =  locker_robot_director.Report();
 
+  std::cout << report << std::endl;
   EXPECT_EQ("M 3 13\n\tL 0 8\n\tL 3 5\n", report);
 }
 
+TEST(locker_robot_director,
+     should_print_report_when_statistic_report_given_a_manager_and_manager_has_one_locker_and_one_robot){
+  auto locker1 = new Locker(5);
+  auto locker2 = new Locker(5);
+
+  for (int i = 0; i < 3; i++){
+    Bag bag(i);
+    locker1->SaveBag(bag);
+  }
+
+  for (int i = 0; i < 4; i++){
+    Bag bag(i*10);
+    locker2->SaveBag(bag);
+  }
+
+  auto primary_locker_robot = new PrimaryLockerRobot({locker2});
+  LockerRobotManager locker_robot_manager({locker1}, {primary_locker_robot});
+
+  std::vector<LockerRobotManager> locker_robot_managers;
+  locker_robot_managers.push_back(locker_robot_manager);
+
+  LockerRobotDirector locker_robot_director(locker_robot_managers);
+
+  std::string report =  locker_robot_director.Report();
+  std::cout << report << std::endl;
+  std::cout << "M 3 10\n\tL 2 5\n\tR 1 5\n\t\tL 1 5\n" << std::endl;
+  EXPECT_EQ("M 3 10\n\tL 2 5\n\tR 1 5\n\t\tL 1 5\n", report);
+}

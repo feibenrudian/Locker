@@ -21,7 +21,7 @@ public:
   virtual ~Robot();
   virtual SaveBagResult SaveBag(const Bag& bag) = 0;
   GetBagResult GetBag(const Ticket& ticket);
-  ReportData Report();
+  ReportData Report(std::string report_head);
 
   std::vector<Locker*> manage_lockers;
 };
