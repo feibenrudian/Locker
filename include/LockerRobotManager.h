@@ -15,7 +15,7 @@ public:
                      std::vector<Robot *>  managedRobot);
   SaveBagResult SaveBag(const Bag& bag);
   GetBagResult GetBag(const Ticket& ticket);
-
+  std::string Report();
 
 private:
   std::vector<Robot*> managed_robot;

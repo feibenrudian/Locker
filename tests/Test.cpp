@@ -2,6 +2,7 @@
 #include "../include/LockerRobotManager.h"
 #include "../include/PrimaryLockerRobot.h"
 #include "../include/SmartLockerRobot.h"
+#include "../include/LockerRobotDirector.h"
 #include <gtest/gtest.h>
 
 using namespace std;
@@ -700,5 +701,33 @@ TEST(
   EXPECT_EQ(get_bag_illegal_ticket, result.err);
 
   DeleteComplexRobotManager(locker_robot_manager_data);
+}
+
+TEST(locker_robot_director,
+     should_print_report_when_statistic_report_given_a_manager_and_manager_has_two_lockers){
+
+  auto locker1 = new Locker(8);
+  auto locker2 = new Locker(5);
+
+  for (int i = 0; i < 8; i++){
+    Bag bag(i);
+    locker1->SaveBag(bag);
+  }
+
+  for (int i = 0; i < 2; i++){
+    Bag bag(i*10);
+    locker2->SaveBag(bag);
+  }
+
+  LockerRobotManager locker_robot_manager({locker1, locker2});
+
+  std::vector<LockerRobotManager> locker_robot_managers;
+  locker_robot_managers.push_back(locker_robot_manager);
+
+  LockerRobotDirector locker_robot_director(locker_robot_managers);
+
+  std::string report =  locker_robot_director.Report();
+
+  EXPECT_EQ("M 3 13\n\tL 0 8\n\tL 3 5\n", report);
 }
 

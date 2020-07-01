@@ -6,7 +6,7 @@
 #include <random>
 
 
-Locker::Locker(int remain) : remain(remain) {}
+Locker::Locker(int remain) : remain(remain), amount(remain) {}
 SaveBagResult Locker::SaveBag(const Bag &save_bag) {
   SaveBagResult ret;
 
@@ -32,4 +32,6 @@ GetBagResult Locker::GetBag(const Ticket &ticket) {
 
   return GetBagResult{get_bag_illegal_ticket, Bag(0)};
 }
-
+std::string  Locker::Report() {
+  return "L " + std::to_string(remain) + " " + std::to_string(amount) + "\n";
+}

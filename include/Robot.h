@@ -7,6 +7,13 @@
 
 #include "Locker.h"
 #include <vector>
+#include <iostream>
+
+struct ReportData{
+  int remain = 0;
+  int amount = 0;
+  std::string display_content;
+};
 
 class Robot {
 public:
@@ -14,6 +21,7 @@ public:
   virtual ~Robot();
   virtual SaveBagResult SaveBag(const Bag& bag) = 0;
   GetBagResult GetBag(const Ticket& ticket);
+  ReportData Report();
 
   std::vector<Locker*> manage_lockers;
 };

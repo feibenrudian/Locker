@@ -39,3 +39,29 @@ GetBagResult LockerRobotManager::GetBag(const Ticket &ticket) {
 
   return internal_.GetBag(ticket);
 }
+std::string LockerRobotManager::Report() {
+  std::string report;
+  int remain = 0;
+  int amount = 0;
+
+  std::string LockerReport;
+  for (auto one_locker : internal_.manage_lockers){
+    remain += one_locker->remain;
+    amount += one_locker->amount;
+    LockerReport += "\t" + one_locker->Report();
+  }
+
+  std::string RobotReport;
+  for (auto one_robot : managed_robot){
+    auto report = one_robot->Report();
+    remain += report.remain;
+    amount += report.amount;
+    RobotReport = "\t" + report.display_content;
+  }
+
+  report = "M " + std::to_string(remain) + " " +std::to_string(amount) + "\n";
+  report += LockerReport;
+  report += RobotReport;
+
+  return report;
+}

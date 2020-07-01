@@ -5,6 +5,7 @@
 #ifndef GILEROSS_LOCKER_H
 #define GILEROSS_LOCKER_H
 #include <map>
+#include <iostream>
 
 struct Bag {
   int id;//id is 0, means null bag
@@ -42,7 +43,9 @@ public:
   SaveBagResult SaveBag(const Bag& save_bag);
   GetBagResult GetBag(const Ticket& ticket);
   int remain = 0;
+  int amount = 0;
   Locker(int remain);
+  std::string  Report();
 
   std::map<int, Bag> content;
 };
